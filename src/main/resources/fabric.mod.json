@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "magneticdart",
+	"version": "${version}",
+	"name": "MagneticDart",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/magneticdart/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"archives.tater.magneticdart.MagneticDart"
+		],
+		"client": [
+			"archives.tater.magneticdart.client.MagneticDartClient"
+		],
+		"fabric-datagen": [
+			"archives.tater.magneticdart.client.MagneticDartDataGenerator"
+		]
+	},
+	"mixins": [
+		"magneticdart.mixins.json",
+		{
+			"config": "magneticdart.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~26.1.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
