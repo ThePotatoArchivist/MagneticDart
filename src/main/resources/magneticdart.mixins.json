@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "AbstractArrowMixin",
+    "ClipContextBlockMixin",
     "CrossbowItemMixin",
     "ProjectileMixin",
     "ProjectileWeaponItemMixin"

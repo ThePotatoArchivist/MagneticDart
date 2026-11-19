@@ -32,6 +32,7 @@
 			"environment": "client"
 		}
 	],
+	"accessWidener": "magneticdart.classtweaker",
 	"depends": {
 		"fabricloader": ">=0.19.2",
 		"minecraft": "~26.1.2",

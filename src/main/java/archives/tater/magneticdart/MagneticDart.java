@@ -1,11 +1,11 @@
 package archives.tater.magneticdart;
 
-import archives.tater.magneticdart.entity.MagneticDartEntity;
 import archives.tater.magneticdart.registry.MagneticDartAttachments;
 import archives.tater.magneticdart.registry.MagneticDartEntities;
 import archives.tater.magneticdart.registry.MagneticDartItems;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import org.spongepowered.asm.mixin.Unique;
 
 import net.minecraft.resources.Identifier;
@@ -19,8 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import static net.minecraft.util.Mth.square;
-
 public class MagneticDart implements ModInitializer {
 	public static final String MOD_ID = "magneticdart";
 
@@ -33,6 +31,13 @@ public class MagneticDart implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
+	public static final MagneticDartConfig CONFIG = MagneticDartConfig.createToml(
+			FabricLoader.getInstance().getConfigDir(),
+			"",
+			MOD_ID,
+			MagneticDartConfig.class
+	);
+
 	public static <T> List<T> withAppended(List<T> list, T value) {
 		var builder = ImmutableList.<T>builderWithExpectedSize(list.size() + 1);
 		builder.addAll(list);
@@ -42,8 +47,7 @@ public class MagneticDart implements ModInitializer {
 
 	public static Vec3 getPull(Entity attractor, Entity attracted) {
 		var diff = attractor.position().subtract(attracted.position());
-		var length = diff.length();
-        return diff.normalize().scale(square(MagneticDartEntity.MAX_ACCELERATION) / length);
+        return diff.normalize().scale(CONFIG.pullStrength);
 	}
 
 	@Unique

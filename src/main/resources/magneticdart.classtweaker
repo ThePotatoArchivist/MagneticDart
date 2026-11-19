@@ -1,0 +1,2 @@
+classTweaker v2 official
+extend-enum net/minecraft/world/level/ClipContext$Block MAGNETICDART_NONE

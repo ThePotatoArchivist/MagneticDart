@@ -3,6 +3,9 @@ package archives.tater.magneticdart.mixin;
 import archives.tater.magneticdart.MagneticDart;
 import archives.tater.magneticdart.registry.MagneticDartEntityTags;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -33,6 +36,16 @@ public abstract class ProjectileMixin extends Entity {
             if (entity == null) continue;
             addDeltaMovement(MagneticDart.getPull(entity, this));
         }
+    }
+
+    @Definition(id = "BLOCK", field = "Lnet/minecraft/world/phys/HitResult$Type;BLOCK:Lnet/minecraft/world/phys/HitResult$Type;")
+    @Expression("? == BLOCK")
+    @ModifyExpressionValue(
+            method = "onHit",
+            at = @At("MIXINEXTRAS:EXPRESSION")
+    )
+    private boolean noHitBlock(boolean original) {
+        return original && getAttractors(this).isEmpty();
     }
 
     @Override

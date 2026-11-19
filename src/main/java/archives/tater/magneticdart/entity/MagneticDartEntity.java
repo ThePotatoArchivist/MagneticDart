@@ -1,5 +1,6 @@
 package archives.tater.magneticdart.entity;
 
+import archives.tater.magneticdart.MagneticDart;
 import archives.tater.magneticdart.registry.MagneticDartAttachments;
 import archives.tater.magneticdart.registry.MagneticDartEntities;
 import archives.tater.magneticdart.registry.MagneticDartEntityTags;
@@ -19,8 +20,6 @@ import static archives.tater.magneticdart.MagneticDart.withAppended;
 import static net.minecraft.util.Mth.square;
 
 public class MagneticDartEntity extends AbstractArrow {
-    public static final double MAX_RANGE = 32;
-    public static final double MAX_ACCELERATION = 0.5;
 
     public MagneticDartEntity(EntityType<? extends MagneticDartEntity> type, Level level) {
         super(type, level);
@@ -37,16 +36,17 @@ public class MagneticDartEntity extends AbstractArrow {
     @Override
     public void tick() {
         if (!level().isClientSide()) {
-            var maxRange = MAX_RANGE;
+            var maxRange = MagneticDart.CONFIG.captureRange;
 
             for (var entity : level().getEntities(
                     this,
                     AABB.ofSize(position(), 2 * maxRange, 2 * maxRange, 2 * maxRange),
                     entity -> entity.is(MagneticDartEntityTags.MAGNETIC_PROJECTILE) && distanceToSqr(entity) < square(maxRange)
-            ))
-                entity.modifyAttached(MagneticDartAttachments.ATTRACTORS, attractors ->
-                        withAppended(attractors, EntityReference.of(this))
-                );
+            )) {
+                var attractors = MagneticDart.getAttractors(entity);
+                if (attractors.stream().noneMatch(ref -> ref.matches(this)))
+                    entity.setAttached(MagneticDartAttachments.ATTRACTORS, withAppended(attractors, EntityReference.of(this)));
+            }
         }
 
         super.tick();
