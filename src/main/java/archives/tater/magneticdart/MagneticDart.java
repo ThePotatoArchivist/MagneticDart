@@ -6,9 +6,11 @@ import archives.tater.magneticdart.registry.MagneticDartEntities;
 import archives.tater.magneticdart.registry.MagneticDartItems;
 
 import net.fabricmc.api.ModInitializer;
+import org.spongepowered.asm.mixin.Unique;
 
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityReference;
 import net.minecraft.world.phys.Vec3;
 
 import com.google.common.collect.ImmutableList;
@@ -42,6 +44,11 @@ public class MagneticDart implements ModInitializer {
 		var diff = attractor.position().subtract(attracted.position());
 		var length = diff.length();
         return diff.normalize().scale(square(MagneticDartEntity.MAX_ACCELERATION) / length);
+	}
+
+	@Unique
+	public static List<EntityReference<Entity>> getAttractors(Entity entity) {
+		return entity.getAttachedOrElse(MagneticDartAttachments.ATTRACTORS, List.of());
 	}
 
 	@Override
