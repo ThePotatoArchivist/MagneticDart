@@ -40,4 +40,8 @@ public class MagneticDartEntities {
             .clientTrackingRange(4)
             .updateInterval(20)
     );
+
+    public static void init() {
+
+    }
 }
