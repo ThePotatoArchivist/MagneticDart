@@ -1,6 +1,7 @@
 package archives.tater.magneticdart.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,5 +38,13 @@ public abstract class AbstractArrowMixin extends Projectile {
     private ClipContext noPhysics(Vec3 from, Vec3 _to, ClipContext.Block block, ClipContext.Fluid fluid, Entity entity, Operation<ClipContext> original) {
         if (getAttractors(this).isEmpty()) return original.call(from, _to, block, fluid, entity);
         return original.call(from, _to, ClipContext.Block.MAGNETICDART_NONE, fluid, entity);
+    }
+
+    @WrapWithCondition(
+            method = "tick",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/arrow/AbstractArrow;applyInertia(F)V")
+    )
+    private boolean noDrag(AbstractArrow instance, float inertia) {
+        return getAttractors(this).isEmpty();
     }
 }

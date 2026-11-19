@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static java.lang.Math.max;
+
 public class MagneticDart implements ModInitializer {
 	public static final String MOD_ID = "magneticdart";
 
@@ -46,8 +48,9 @@ public class MagneticDart implements ModInitializer {
 	}
 
 	public static Vec3 getPull(Entity attractor, Entity attracted) {
-		var diff = attractor.position().subtract(attracted.position());
-        return diff.normalize().scale(CONFIG.pullStrength);
+		var direction = attractor.position().subtract(attracted.position()).normalize();
+		var currentVelocity = attracted.getDeltaMovement().dot(direction);
+        return direction.scale(CONFIG.pullStrength - max(0, currentVelocity));
 	}
 
 	@Unique
